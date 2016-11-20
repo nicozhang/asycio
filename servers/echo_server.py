@@ -11,10 +11,7 @@ def send_data_finish(client):
 	pass
 
 def receive_new_data(client, data):
-	if data.index(data, "quit") == 0:
-		client.close()
-	else:
-		client.on_send(data, send_data_finish)	
+	client.on_send(data, send_data_finish)	
 	
 
 def accept_new_client(client, address):
