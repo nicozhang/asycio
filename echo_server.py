@@ -18,5 +18,9 @@ def accept_new_client(client, address):
 	print "new client accpet", address
 	client.on_recv(receive_new_data)	
 
+def close_handle(client):
+	print "close: ", client
+
 s.on_accept(accept_new_client)
+s.on_close(close_handle)
 loop.run()

@@ -1,11 +1,15 @@
 #!/usr/bin/python
 
-import socket;
+import socket
 import os
 
 def setup():
 	os.system("./echo_server.py &")
 	os.system("sleep 1")
+
+def cleanup():
+	os.system("sleep 1")
+	os.system("killall echo_server.py")
 
 def create_echo_tcp_client():
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
@@ -20,6 +24,10 @@ def case1():
 	if data != "hello":
 		print "case1 failure"	
 
+	s.close()
+
 setup()
 
 case1()
+
+cleanup()

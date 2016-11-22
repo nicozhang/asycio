@@ -19,6 +19,14 @@ class select_loop(event_loop):
 	def new_connection(self, sock):
 		self.connections.append(sock)	
 
+	def del_connection(self, sock):
+		self.connections.remove(sock)
+		self.read.remove(sock)
+		self.write.remove(sock)
+		self.read_action.remove(sock.fileno())
+		self.read_repeats.remove(sock.fileno())	
+		self.write_action.remove(sock.fileno())
+
 	def register_read_action(self, sock, func, repeat = 1):
 		print "register_read_action", sock, func
 		self.read.append(sock)

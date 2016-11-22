@@ -6,6 +6,14 @@ class async_socket:
 		self.socket = socket
 		self.event_loop = event_loop
 		self.event_loop.new_connection(socket)
+		self.close_action = self.__default_close_action
+
+	def close():
+		self.event_loop.del_connection(self.socket)
+		self.socket.close()
+
+	def __default_close_action(self):
+		pass
 
 	def register_read_action(self, func, repeat = 1):
 		self.event_loop.register_read_action(self.socket, func, repeat)
@@ -16,24 +24,25 @@ class async_socket:
 	def on_recv(self, func, repeat = 1):
 
         	def onRecv_cb():
-                	print "Recevi new data"
                 	data = self.socket.recv(1024)
-                	func(self, data)
+			if len(data) != 0:
+                		func(self, data)
+			else:
+				close_func = self.close_action
+				close_func()
+				
 
 		self.register_read_action(onRecv_cb, repeat)
 
 	def on_send(self, data, func):
-		print "prepare to send"		
                 def onSend_cb():
-			print "sending: ", data
                         self.socket.send(data)
                         func(self)
 
 		self.register_write_action(onSend_cb)
 
 	def on_close(self, func):
-		pass
-
+		self.close_action = func
 
 class async_tcp_server(async_socket):
 	def __init__(self, address, port, event_loop):
