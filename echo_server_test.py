@@ -7,7 +7,7 @@ def setup():
 	os.system("./echo_server.py &")
 	os.system("sleep 1")
 
-def cleanup():
+def teardown():
 	os.system("sleep 1")
 	os.system("killall echo_server.py")
 
@@ -21,13 +21,5 @@ def case1():
 	s = create_echo_tcp_client();
 	s.sendall("hello")
 	data = s.recv(1024)
-	if data != "hello":
-		print "case1 failure"	
-
+	assert(data == "hello")
 	s.close()
-
-setup()
-
-case1()
-
-cleanup()
