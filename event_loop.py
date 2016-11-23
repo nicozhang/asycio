@@ -28,22 +28,17 @@ class select_loop(event_loop):
 		self.write_action.remove(sock.fileno())
 
 	def register_read_action(self, sock, func, repeat = 1):
-		print "register_read_action", sock, func
 		self.read.append(sock)
 		self.read_action[sock.fileno()] = func
 		self.read_repeats[sock.fileno()] = repeat
 
 	def register_write_action(self, sock, func):
-		print "register_write_action", sock, func
 		self.write.append(sock)
 		self.write_action[sock.fileno()] = func
 
 	def run(self):
 		while True:
 			r, w, e = select.select(self.read, self.write, [])
-			print "read: ", r
-			print "write: ", w
-			print "connections: ", self.connections
 			for sock in self.connections:
 				if sock in r:
 					func = self.read_action[sock.fileno()]
@@ -54,7 +49,6 @@ class select_loop(event_loop):
 						del(self.read_repeats[sock.fileno()])
 
 				if sock in w:
-					print "Can write"
 					func = self.write_action[sock.fileno()]
 					func()
 					self.write.remove(sock)
