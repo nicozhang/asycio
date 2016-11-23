@@ -18,8 +18,21 @@ def create_echo_tcp_client():
 
 
 def test_send_reply():
-	s = create_echo_tcp_client();
+	s = create_echo_tcp_client()
 	s.sendall("hello")
 	data = s.recv(1024)
 	assert(data == "hello")
+	s.close()
+
+def test_send_large_data():
+	s = create_echo_tcp_client()
+
+	data = ""
+	for idx in range(0, 10000):
+		data = data + 'A'
+
+	s.sendall(data);
+	received = s.recv(10000)
+
+	assert(data == received)
 	s.close()

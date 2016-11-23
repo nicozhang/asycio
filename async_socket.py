@@ -8,7 +8,7 @@ class async_socket:
 		self.event_loop.new_connection(socket)
 		self.close_action = self.__default_close_action
 
-	def close():
+	def close(self):
 		self.event_loop.del_connection(self.socket)
 		self.socket.close()
 
@@ -25,17 +25,20 @@ class async_socket:
 
         	def onRecv_cb():
                 	data = self.socket.recv(1024)
+			print "Recv data len = ", len(data), " from sock.fileno() = ", self.socket.fileno()
 			if len(data) != 0:
                 		func(self, data)
 			else:
 				close_func = self.close_action
 				close_func()
-				
+				print "close fd = ", self.socket.fileno()
+				self.close()
 
 		self.register_read_action(onRecv_cb, repeat)
 
 	def on_send(self, data, func):
                 def onSend_cb():
+			print "Send data len = ", len(data), " from sock.fileno() = ", self.socket.fileno()
                         self.socket.send(data)
                         func(self)
 
