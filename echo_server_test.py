@@ -17,7 +17,7 @@ def create_echo_tcp_client():
 	return s
 
 
-def case1():
+def test_send_reply():
 	s = create_echo_tcp_client();
 	s.sendall("hello")
 	data = s.recv(1024)
